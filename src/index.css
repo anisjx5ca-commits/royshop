@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0a0e27;
+  color: #ffffff;
+}
+
+/* Bloom Effect */
+@keyframes bloom {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px #FF006E) drop-shadow(0 0 40px #00D9FF);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px #FF006E) drop-shadow(0 0 60px #B800E8);
+  }
+}
+
+@keyframes glow-pink {
+  0%, 100% {
+    text-shadow: 0 0 10px #FF006E, 0 0 20px #FF006E, 0 0 30px #FF006E, 0 0 40px #FF006E;
+    box-shadow: 0 0 10px #FF006E, 0 0 20px #FF006E;
+  }
+  50% {
+    text-shadow: 0 0 15px #FF006E, 0 0 30px #FF006E, 0 0 45px #FF006E, 0 0 60px #FF006E;
+    box-shadow: 0 0 15px #FF006E, 0 0 30px #FF006E;
+  }
+}
+
+@keyframes glow-blue {
+  0%, 100% {
+    text-shadow: 0 0 10px #00D9FF, 0 0 20px #00D9FF, 0 0 30px #00D9FF;
+    box-shadow: 0 0 10px #00D9FF, 0 0 20px #00D9FF;
+  }
+  50% {
+    text-shadow: 0 0 15px #00D9FF, 0 0 30px #00D9FF, 0 0 45px #00D9FF;
+    box-shadow: 0 0 15px #00D9FF, 0 0 30px #00D9FF;
+  }
+}
+
+/* Neon Glow Effect */
+@keyframes neon-glow {
+  0%, 100% {
+    text-shadow: 0 0 10px #FF006E, 0 0 20px #FF006E, 0 0 30px #FF006E, 0 0 40px #FF006E;
+    box-shadow: 0 0 10px #FF006E, 0 0 20px #FF006E;
+  }
+  50% {
+    text-shadow: 0 0 5px #00D9FF, 0 0 10px #00D9FF, 0 0 15px #00D9FF, 0 0 20px #00D9FF;
+    box-shadow: 0 0 5px #00D9FF, 0 0 10px #00D9FF;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0e27;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FF006E;
+  border-radius: 6px;
+  box-shadow: 0 0 10px #FF006E;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00D9FF;
+  box-shadow: 0 0 15px #00D9FF;
+}
+
+/* Neon Text Styles */
+.neon-text-pink {
+  color: #ffffff;
+  text-shadow: 0 0 10px #FF006E, 0 0 20px #FF006E, 0 0 30px #FF006E;
+  animation: glow-pink 3s ease-in-out infinite;
+}
+
+.neon-text-blue {
+  color: #00D9FF;
+  text-shadow: 0 0 10px #00D9FF, 0 0 20px #00D9FF, 0 0 30px #00D9FF;
+  animation: glow-blue 3s ease-in-out infinite;
+}
+
+.neon-glow {
+  animation: bloom 4s ease-in-out infinite;
+}
+
+/* Gradient Border Animation */
+@keyframes gradient-border {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-border {
+  background: linear-gradient(-45deg, #00D9FF, #FF006E, #B800E8, #00D9FF);
+  background-size: 300% 300%;
+  animation: gradient-border 6s ease infinite;
+}
+
+/* Smooth transitions */
+button,
+input,
+textarea,
+select,
+a {
+  transition: all 0.3s ease;
+}
+
+/* Link hover effects */
+a {
+  color: #00D9FF;
+}
+
+a:hover {
+  color: #FF006E;
+  text-shadow: 0 0 10px #FF006E;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .neon-text-pink,
+  .neon-text-blue {
+    font-size: 14px;
+  }
+}
+
+
+/* Canvas styling */
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

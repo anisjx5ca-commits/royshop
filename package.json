@@ -1,0 +1,36 @@
+{
+  "name": "royshop-3d-ecommerce",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
+    "three": "^0.160.0",
+    "@react-three/fiber": "^8.14.0",
+    "@react-three/drei": "^9.88.0",
+    "zustand": "^4.4.0",
+    "framer-motion": "^10.16.4",
+    "tailwindcss": "^3.3.5",
+    "@supabase/supabase-js": "^2.38.0",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^4.12.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/three": "^0.160.0",
+    "@vitejs/plugin-react": "^4.1.1",
+    "vite": "^5.0.0",
+    "typescript": "^5.2.2",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31"
+  }
+}
