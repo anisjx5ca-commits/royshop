@@ -4,8 +4,14 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+console.log('🔍 Supabase Configuration:');
+console.log('  URL:', supabaseUrl ? '✅ Set' : '❌ MISSING');
+console.log('  Key:', supabaseKey ? '✅ Set' : '❌ MISSING');
+
 if (!supabaseUrl || !supabaseKey) {
-  console.warn('Supabase credentials not configured. Some features will not work.');
+  console.error('❌ CRITICAL: Supabase credentials not configured!');
+  console.error('   Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Netlify Environment Variables');
+  console.error('   Then trigger a new deploy: Deploys → Trigger deploy → Deploy site');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
