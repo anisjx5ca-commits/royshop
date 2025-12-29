@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -26,16 +27,15 @@ export interface Product {
 
 export interface Order {
   id: string;
-  user_name: string;
-  phone: string;
+  customer_name: string;
+  phone_number: string;
   wilaya: string;
   baladiya: string;
-  address: string;
+  exact_address: string;
+  items: any[];
   total_price: number;
   shipping_cost: number;
-  items_json: string;
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-  site_rating?: number;
+  status?: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
   created_at?: string;
 }
 

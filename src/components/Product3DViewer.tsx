@@ -51,7 +51,7 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
         <pointLight position={[0, 10, 0]} intensity={0.5} />
 
         {/* Environment Map for realistic reflections */}
-        <Environment preset="studio" intensity={0.8} />
+        <Environment preset="studio" />
 
         {/* Presentation Controls for desktop, OrbitControls for mobile */}
         <PresentationControls
