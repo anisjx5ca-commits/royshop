@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore.ts';
 import { FaShoppingCart, FaTimes } from 'react-icons/fa';
