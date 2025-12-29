@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+console.log('HomePage component loaded');
+
 export const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-neon-black text-neon-white overflow-hidden relative">
