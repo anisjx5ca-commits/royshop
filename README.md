@@ -257,6 +257,69 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
+## 🌐 Deployment to Netlify
+
+### Prerequisites
+- GitHub account with repository created
+- Netlify account (sign up at netlify.com)
+
+### Step 1: Push to GitHub
+
+```bash
+# Add remote repository
+git remote add origin https://github.com/YOUR_USERNAME/3d-royshop.git
+
+# Push to GitHub
+git branch -M main
+git push -u origin main
+```
+
+### Step 2: Deploy to Netlify
+
+1. **Connect Repository:**
+   - Go to [Netlify Dashboard](https://app.netlify.com)
+   - Click "New site from Git"
+   - Choose GitHub and authorize
+   - Select your repository
+
+2. **Configure Build Settings:**
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Node version: 18
+
+3. **Set Environment Variables:**
+   - In Netlify Dashboard → Site Settings → Build & deploy → Environment
+   - Add these variables:
+     - `VITE_SUPABASE_URL`: Your Supabase project URL
+     - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+
+4. **Deploy:**
+   - Click "Deploy"
+   - Wait for build to complete (2-3 minutes)
+   - Your site will be live at `https://your-site-name.netlify.app`
+
+### Netlify Configuration
+
+The `netlify.toml` file includes:
+- Automatic routing for React Router (all routes → index.html)
+- Security headers (XSS protection, content type options)
+- Cache control for assets (aggressive caching for /assets/*)
+- No cache for index.html (always fresh)
+
+### Automatic Deployments
+
+- Every push to `main` branch automatically deploys
+- Preview builds for pull requests
+- Instant rollbacks available
+
+### Important Notes
+
+✅ **The project is Netlify-ready:**
+- Vite build configuration optimized
+- React Router redirects configured
+- Environment variables properly handled
+- No server-side code required (static site)
+
 ## 📱 Responsive Behavior
 
 - **Mobile (< 768px):** Stacked layout, drawer cart, touch-optimized
