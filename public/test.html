@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyShop Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0e27;
+            color: #00D9FF;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #FF006E;
+            text-shadow: 0 0 20px #FF006E;
+        }
+        p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .status {
+            margin-top: 40px;
+            padding: 20px;
+            border: 2px solid #00D9FF;
+            border-radius: 10px;
+            background: rgba(0, 217, 255, 0.1);
+        }
+        .success { color: #00FF41; }
+        .error { color: #FF006E; }
+        .info { color: #00D9FF; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 RoyShop</h1>
+        <p class="info">Test Page - Server is Running</p>
+        <div class="status">
+            <p class="success">✅ Static Assets Working</p>
+            <p class="info">The app is loading...</p>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #888;">
+                If you see this page, the server is responding.<br>
+                Check the main app at <strong>/</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
