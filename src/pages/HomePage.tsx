@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useProducts } from '../hooks/useProducts.ts';
+import { ProductCard } from '../components/ProductCard.tsx';
 
 console.log('HomePage component loaded');
 
 export const HomePage: React.FC = () => {
+  const { products, loading, error } = useProducts({ limit: 4 });
+
   return (
     <div className="min-h-screen bg-neon-black text-neon-white overflow-hidden relative">
       {/* 3D Wireframe Grid Background */}
@@ -143,71 +147,32 @@ export const HomePage: React.FC = () => {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.15, duration: 0.6 }}
-                  whileHover={{ y: -10 }}
-                  className="group"
-                >
-                  <div
-                    className="bg-neon-black/40 backdrop-blur-sm border-4 p-6 rounded-2xl hover:translate-y-[-8px] transition-all duration-300 relative overflow-hidden"
-                    style={{
-                      borderImage: 'linear-gradient(135deg, #00D9FF 0%, #FF006E 100%) 1',
-                      boxShadow: '0 0 40px rgba(0, 217, 255, 0.3), 0 0 80px rgba(255, 0, 110, 0.2), inset 0 0 40px rgba(0, 217, 255, 0.1)',
-                    }}
+              {loading ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-neon-cyan text-xl">Loading products...</p>
+                </div>
+              ) : error ? (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-neon-pink text-xl">Error loading products: {error}</p>
+                </div>
+              ) : products.length > 0 ? (
+                products.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    whileHover={{ y: -10 }}
+                    className="group"
                   >
-                    {/* Gradient border effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
-                      background: 'linear-gradient(135deg, #00D9FF 0%, #FF006E 100%)',
-                    }}></div>
-                    
-                    {/* Product Image */}
-                    <div 
-                      className="relative bg-gradient-to-br from-neon-black to-neon-black/50 w-full h-48 rounded-xl mb-4 flex items-center justify-center border-2 border-neon-blue/30 group-hover:border-neon-pink/50 transition-all duration-300 overflow-hidden"
-                      style={{
-                        boxShadow: '0 0 30px rgba(0, 217, 255, 0.2), inset 0 0 30px rgba(0, 217, 255, 0.05)',
-                      }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-neon-pink/10 to-neon-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <span className="text-neon-cyan/60 text-lg font-bold group-hover:text-neon-pink/80 transition-colors duration-300 relative z-10">
-                        Product {i}
-                      </span>
-                    </div>
-                    
-                    <h4 
-                      className="text-xl font-bold mb-2 relative z-10"
-                      style={{
-                        textShadow: '0 0 15px #FF006E',
-                        color: '#FF006E',
-                      }}
-                    >
-                      Premium Item {i}
-                    </h4>
-                    <p 
-                      className="text-neon-cyan mb-6 text-lg font-semibold relative z-10"
-                      style={{
-                        textShadow: '0 0 10px #00D9FF',
-                      }}
-                    >
-                      DA {2500 + i * 500}
-                    </p>
-                    
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full bg-neon-black border-3 border-neon-pink text-neon-white font-bold py-3 rounded-lg hover:border-neon-blue transition-all duration-300 relative z-10"
-                      style={{
-                        boxShadow: '0 0 20px rgba(255, 0, 110, 0.5)',
-                      }}
-                    >
-                      Add to Cart
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ))}
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-12">
+                  <p className="text-neon-cyan text-xl">No products available</p>
+                </div>
+              )}
             </div>
           </motion.div>
 

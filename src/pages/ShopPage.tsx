@@ -1,98 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore.ts';
-import { getProducts } from '../lib/supabase.ts';
-import { Product } from '../lib/supabase.ts';
-
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Casual Shirt',
-    price: 4500,
-    stock: 15,
-    model_url: '/models/shirt-sample.glb',
-    texture_config: { colors: ['white', 'black', 'blue'] },
-    image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    description: 'High-quality casual shirt made from premium cotton',
-  },
-  {
-    id: '2',
-    name: 'Elegant Dress Pants',
-    price: 5500,
-    stock: 12,
-    model_url: '/models/pants-sample.glb',
-    texture_config: { colors: ['black', 'navy', 'gray'] },
-    image_url: 'https://images.unsplash.com/photo-1473181052071-15efbf76eaea?w=400&h=400&fit=crop',
-    description: 'Sophisticated dress pants for any occasion',
-  },
-  {
-    id: '3',
-    name: 'Classic Denim Jacket',
-    price: 6500,
-    stock: 8,
-    model_url: '/models/jacket-sample.glb',
-    texture_config: { colors: ['blue', 'black'] },
-    image_url: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop',
-    description: 'Timeless denim jacket for a stylish look',
-  },
-  {
-    id: '4',
-    name: 'Stylish Sweater',
-    price: 4000,
-    stock: 20,
-    model_url: '/models/sweater-sample.glb',
-    texture_config: { colors: ['red', 'gray', 'navy'] },
-    image_url: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?w=400&h=400&fit=crop',
-    description: 'Cozy sweater perfect for any season',
-  },
-  {
-    id: '5',
-    name: 'Summer T-Shirt',
-    price: 2500,
-    stock: 30,
-    model_url: '/models/tshirt-sample.glb',
-    texture_config: { colors: ['white', 'black', 'yellow', 'pink'] },
-    image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-    description: 'Lightweight and breathable summer essential',
-  },
-  {
-    id: '6',
-    name: 'Formal Blazer',
-    price: 8000,
-    stock: 5,
-    model_url: '/models/blazer-sample.glb',
-    texture_config: { colors: ['black', 'navy', 'charcoal'] },
-    image_url: 'https://images.unsplash.com/photo-1505025114519-a9fc94aa64bf?w=400&h=400&fit=crop',
-    description: 'Premium blazer for professional settings',
-  },
-];
+import { useProducts, type Product } from '../hooks/useProducts.ts';
 
 export const ShopPage: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
-  const [loading, setLoading] = useState(false);
+  const { products, loading } = useProducts();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const addToCart = useCartStore((state) => state.addToCart);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const dbProducts = await getProducts();
-        if (dbProducts.length > 0) {
-          setProducts(dbProducts);
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        // Fallback to mock products
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   // Filter and sort products
   let filteredProducts = products.filter(
@@ -114,13 +30,13 @@ export const ShopPage: React.FC = () => {
   const handleAddToCart = (product: Product) => {
     addToCart({
       id: `${product.id}-${Date.now()}`,
-      modelId: product.id,
+      modelId: `${product.id}`,
       name: product.name,
       price: product.price,
       color: 'Default',
       size: 'M',
       quantity: 1,
-      image: product.image_url || '',
+      image: product.image || product.image_url || '',
     });
   };
 
