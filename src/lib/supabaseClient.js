@@ -12,12 +12,14 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client with credentials from environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Works on both local (.env.local) and Netlify (Environment Variables)
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Supabase Initialization Failed - Missing Credentials');
   throw new Error(
-    'Missing Supabase credentials. Please ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in .env.local'
+    'Missing Supabase credentials.\n\nLocal: Add to .env.local\nNetlify: Add to Settings → Build & deploy → Environment variables'
   );
 }
 

@@ -1,19 +1,28 @@
 /// <reference types="vite/client" />
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Read environment variables - works on both local (.env.local) and Netlify (Environment Variables)
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const supabaseKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
-console.log('🔍 Supabase Configuration:');
-console.log('  URL:', supabaseUrl ? '✅ Set' : '❌ MISSING');
-console.log('  Key:', supabaseKey ? '✅ Set' : '❌ MISSING');
+// Detailed logging for debugging
+console.log('🔍 Supabase Configuration Check:');
+console.log('  Environment:', import.meta.env.MODE);
+console.log('  URL Present:', supabaseUrl ? '✅ Yes' : '❌ No');
+console.log('  Key Present:', supabaseKey ? '✅ Yes' : '❌ No');
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ CRITICAL: Supabase credentials not configured!');
-  console.error('   Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to Netlify Environment Variables');
-  console.error('   Then trigger a new deploy: Deploys → Trigger deploy → Deploy site');
+  console.error('❌ CRITICAL ERROR: Supabase credentials missing!');
+  console.error('\n📍 Solution:');
+  console.error('   1. Local Dev: Add to .env.local');
+  console.error('   2. Netlify: Add to Settings → Build & deploy → Environment variables');
+  console.error('   3. Variables needed:');
+  console.error('      - VITE_SUPABASE_URL: https://pguzlxoigpbjyfburfzw.supabase.co');
+  console.error('      - VITE_SUPABASE_ANON_KEY: sb_publishable_4dYNskT-7b0uEfBfNUkUww_GMOTn6OR');
+  console.error('   4. After adding to Netlify, trigger deploy');
 }
 
+// Create client - will work if credentials are available
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Database types
