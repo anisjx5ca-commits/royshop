@@ -13,6 +13,8 @@ export interface Product {
   description?: string;
   rating?: number;
   reviewCount?: number;
+  average_rating?: number | null;
+  total_reviews?: number | null;
   model_url?: string;
   modelPath?: string;
   stock?: number;
@@ -71,6 +73,8 @@ export const useProducts = (options?: UseProductsOptions) => {
           description: p.description,
           rating: p.rating || 0,
           reviewCount: p.reviewCount || 0,
+          average_rating: p.average_rating || null,
+          total_reviews: p.total_reviews || null,
           model_url: p.modelPath || p.model_url,
           stock: p.stock || 100,
           texture_config: p.texture_config || {},
@@ -114,6 +118,8 @@ export const getAllProducts = (): Product[] => {
     description: p.description,
     rating: p.rating || 0,
     reviewCount: p.reviewCount || 0,
+    average_rating: p.average_rating || null,
+    total_reviews: p.total_reviews || null,
     model_url: p.modelPath || p.model_url,
     stock: p.stock || 100,
     texture_config: p.texture_config || {},

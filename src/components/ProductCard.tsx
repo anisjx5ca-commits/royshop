@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaShoppingCart, FaStar } from 'react-icons/fa';
+import { FaShoppingCart } from 'react-icons/fa';
 import { useCartStore } from '../store/cartStore.ts';
+import { CompactStarRating } from './StarRating.tsx';
 
 interface Product {
   id: string | number;
@@ -11,6 +12,8 @@ interface Product {
   image_url?: string;
   rating?: number;
   reviewCount?: number;
+  average_rating?: number | null;
+  total_reviews?: number | null;
   stock?: number;
   inStock?: boolean;
   description?: string;
@@ -24,6 +27,8 @@ interface ProductCardProps {
   price?: number;
   image?: string;
   rating?: number;
+  average_rating?: number | null;
+  total_reviews?: number | null;
   inStock?: boolean;
 }
 
@@ -33,7 +38,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   name: propName,
   price: propPrice,
   image: propImage,
-  rating: propRating = 4.5,
+  rating: propRating,
+  average_rating: propAverageRating,
+  total_reviews: propTotalReviews,
   inStock: propInStock,
 }) => {
   // Use product prop if provided, otherwise use individual props
@@ -41,7 +48,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const productName = product?.name || propName || 'Product';
   const productPrice = product?.price || propPrice || 0;
   const productImage = product?.image || product?.image_url || propImage || '/assets/images/placeholder.jpg';
-  const productRating = product?.rating || propRating;
+  
+  // Prefer average_rating from database, fallback to rating or props
+  const productAverageRating = product?.average_rating ?? propAverageRating ?? product?.rating ?? propRating ?? null;
+  const productTotalReviews = product?.total_reviews ?? propTotalReviews ?? product?.reviewCount ?? 0;
+  
   const isInStock = product?.inStock ?? (product?.stock !== undefined ? product.stock > 0 : propInStock ?? true);
 
   const addToCart = useCartStore((state) => state.addToCart);
@@ -112,14 +123,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             >
               {productPrice.toFixed(0)} DA
             </span>
-            <div className="flex items-center gap-1 bg-neon-black/50 px-2 py-1 rounded">
-              <FaStar className="text-yellow-400" size={14} />
-              <span 
-                className="text-sm font-semibold"
-                style={{ color: '#00D9FF' }}
-              >
-                {productRating?.toFixed(1) || '0.0'}
-              </span>
+            <div className="bg-neon-black/50 px-2 py-1 rounded">
+              <CompactStarRating 
+                rating={productAverageRating} 
+                reviewCount={productTotalReviews}
+              />
             </div>
           </div>
         </div>

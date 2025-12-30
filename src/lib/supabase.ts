@@ -37,6 +37,8 @@ export interface Product {
   description?: string;
   rating?: number;
   reviewCount?: number;
+  average_rating?: number | null;
+  total_reviews?: number | null;
   created_at?: string;
 }
 
@@ -69,7 +71,7 @@ export async function getProducts() {
   try {
     const { data, error } = await supabase
       .from('products')
-      .select('*');
+      .select('*, average_rating, total_reviews');
     
     if (error) throw error;
     return data as Product[];
