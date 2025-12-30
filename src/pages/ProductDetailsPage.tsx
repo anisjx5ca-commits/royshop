@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Product3DViewer } from '../components/Product3DViewer';
+import { ReviewModal } from '../components/ReviewModal';
+import { ReviewSection } from '../components/ReviewSection';
 import { useCartStore } from '../store/cartStore.ts';
 import { getProduct, getReviews, Review } from '../lib/supabase.ts';
 import toast from 'react-hot-toast';
@@ -68,6 +70,7 @@ export const ProductDetailsPage: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   // Default values for fallback
   const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
@@ -107,6 +110,19 @@ export const ProductDetailsPage: React.FC = () => {
 
     loadProduct();
   }, [id]);
+
+  // Function to refresh reviews when a new review is submitted
+  const handleReviewSubmitSuccess = async () => {
+    if (id) {
+      try {
+        const updatedReviews = await getReviews(id);
+        setReviews(updatedReviews);
+        console.log('✅ Reviews refreshed after submission');
+      } catch (error) {
+        console.error('Error refreshing reviews:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -765,8 +781,28 @@ export const ProductDetailsPage: React.FC = () => {
               ))}
             </div>
           </motion.div>
+
+          {/* Review Section */}
+          {id && (
+            <ReviewSection
+              productId={id}
+              onRateClick={() => setIsReviewModalOpen(true)}
+              showRateButton={true}
+            />
+          )}
         </div>
       </div>
+
+      {/* Review Modal */}
+      {id && product && (
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          productId={id}
+          productName={product.name}
+          onClose={() => setIsReviewModalOpen(false)}
+          onSubmitSuccess={handleReviewSubmitSuccess}
+        />
+      )}
     </div>
   );
 };

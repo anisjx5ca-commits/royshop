@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ReviewModal } from '../components/ReviewModal';
 import { useCartStore } from '../store/cartStore.ts';
 
 export const SuccessPage: React.FC = () => {
@@ -8,6 +9,11 @@ export const SuccessPage: React.FC = () => {
   const location = useLocation();
   const clearCart = useCartStore((state) => state.clearCart);
   const orderData = (location.state as any)?.orderData;
+  const [reviewModalState, setReviewModalState] = useState<{
+    isOpen: boolean;
+    productId: string;
+    productName: string;
+  }>({ isOpen: false, productId: '', productName: '' });
 
   useEffect(() => {
     // Clear cart on success page load
@@ -212,33 +218,85 @@ export const SuccessPage: React.FC = () => {
                   </p>
                 </div>
               </div>
+            </motion.div>
+          )}
 
-              {/* Total */}
-              <div
-                className="mt-6 p-4 rounded-lg"
+          {/* Ordered Items Section */}
+          {orderData && orderData.items && orderData.items.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="p-8 rounded-2xl mb-12"
+              style={{
+                border: '2px solid #FF006E',
+                background: 'rgba(255, 0, 110, 0.05)',
+                backdropFilter: 'blur(20px)',
+              }}
+            >
+              <h2
+                className="text-2xl font-bold mb-6"
                 style={{
-                  background: 'rgba(0, 255, 65, 0.1)',
-                  border: '2px solid #00FF41',
+                  textShadow: '0 0 20px #FF006E',
+                  color: '#FF006E',
                 }}
               >
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold" style={{ color: '#00FF41' }}>
-                    ORDER TOTAL
-                  </span>
-                  <motion.span
-                    animate={{ textShadow: ['0 0 20px #00FF41', '0 0 40px #00D9FF', '0 0 20px #00FF41'] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="text-3xl font-black"
+                Items Purchased
+              </h2>
+
+              <div className="space-y-4">
+                {orderData.items.map((item: any, index: number) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="flex items-center justify-between p-4 rounded-lg backdrop-blur-sm"
                     style={{
-                      background: 'linear-gradient(135deg, #00FF41 0%, #00D9FF 100%)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
+                      border: '1px solid #00D9FF',
+                      background: 'rgba(10, 14, 39, 0.6)',
                     }}
                   >
-                    {orderData.total.toFixed(2)} DA
-                  </motion.span>
-                </div>
+                    <div className="flex-1">
+                      <p
+                        className="font-bold"
+                        style={{
+                          color: '#00D9FF',
+                          textShadow: '0 0 10px #00D9FF',
+                        }}
+                      >
+                        {item.name}
+                      </p>
+                      <p
+                        className="text-sm mt-1"
+                        style={{ color: '#FF006E' }}
+                      >
+                        {item.color} • {item.size} • Qty: {item.quantity}
+                      </p>
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() =>
+                        setReviewModalState({
+                          isOpen: true,
+                          productId: item.id || item.modelId || '',
+                          productName: item.name,
+                        })
+                      }
+                      className="px-4 py-2 font-bold rounded-lg ml-4 transition-all"
+                      style={{
+                        border: '2px solid #FFD700',
+                        background: 'rgba(255, 215, 0, 0.1)',
+                        color: '#FFD700',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      ⭐ Rate
+                    </motion.button>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           )}
@@ -260,7 +318,7 @@ export const SuccessPage: React.FC = () => {
             <p style={{ color: '#00D9FF' }}>
               Our team will contact you shortly to confirm your order. You can expect a call or WhatsApp message
               within the next 24 hours. Keep your phone nearby! A confirmation email has also been sent to your
-              registered email address.
+              registered email address. Don't forget to rate the products you received!
             </p>
           </motion.div>
 
@@ -303,6 +361,16 @@ export const SuccessPage: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Review Modal */}
+      <ReviewModal
+        isOpen={reviewModalState.isOpen}
+        productId={reviewModalState.productId}
+        productName={reviewModalState.productName}
+        onClose={() =>
+          setReviewModalState({ isOpen: false, productId: '', productName: '' })
+        }
+      />
     </div>
   );
 };
