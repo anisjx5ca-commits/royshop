@@ -16,6 +16,9 @@ export const Model3D: React.FC<Model3DProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   
+  // Debug logging for model loading
+  console.log('Loading model from:', modelPath);
+  
   try {
     const gltf = useGLTF(modelPath);
     const scene = gltf.scene.clone();
@@ -78,5 +81,5 @@ useGLTF.preload([
   '/models/shirt-sample.glb',
   '/models/pants-sample.glb',
   '/models/jacket-sample.glb',
-  '/models/Elegant Dress Pants.glb',
+  '/models/pants.glb',
 ]);
