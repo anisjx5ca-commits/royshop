@@ -15,7 +15,6 @@ export const Model3D: React.FC<Model3DProps> = ({
   onLoad,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
-  const [loadingError, setLoadingError] = useRef<boolean>(false);
   
   try {
     const gltf = useGLTF(modelPath);
@@ -57,7 +56,6 @@ export const Model3D: React.FC<Model3DProps> = ({
     );
   } catch (error) {
     console.error('Error loading 3D model:', modelPath, error);
-    setLoadingError.current = true;
     
     // Show error text instead of cube
     return (
