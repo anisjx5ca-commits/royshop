@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useProducts } from '../hooks/useProducts.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { CustomerReviewsSection } from '../components/CustomerReviewsSection.tsx';
 
 console.log('HomePage component loaded');
 
@@ -265,6 +266,9 @@ export const HomePage: React.FC = () => {
         >
           💬
         </motion.a>
+
+        {/* Customer Reviews Section */}
+        <CustomerReviewsSection />
 
         {/* Footer */}
         <footer className="border-t border-neon-blue/30 bg-neon-black/80 backdrop-blur-sm py-8 mt-12">
