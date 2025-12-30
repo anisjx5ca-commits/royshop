@@ -69,6 +69,14 @@ export const ProductDetailsPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
 
+  // Default values for fallback
+  const DEFAULT_SIZES = ['S', 'M', 'L', 'XL'];
+  const DEFAULT_COLORS = [
+    { name: 'Black', hex: '#000000' },
+    { name: 'Blue', hex: '#1D4ED8' },
+    { name: 'Amber', hex: '#F59E0B' },
+  ];
+
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -101,12 +109,16 @@ export const ProductDetailsPage: React.FC = () => {
   }, [id]);
 
   useEffect(() => {
-    if (product && product.colors && product.colors.length > 0) {
-      // Set selectedColor to the first color's name
-      const firstColor = product.colors[0];
+    if (product) {
+      // Set default color - ensure we have a fallback
+      const colors = product.colors && product.colors.length > 0 ? product.colors : DEFAULT_COLORS;
+      const firstColor = colors[0];
       const colorName = typeof firstColor === 'string' ? firstColor : firstColor.name;
       setSelectedColor(colorName);
-      setSelectedSize(product.sizes[0]);
+
+      // Set default size - ensure we have a fallback
+      const sizes = product.sizes && product.sizes.length > 0 ? product.sizes : DEFAULT_SIZES;
+      setSelectedSize(sizes[0]);
     }
   }, [product]);
 
@@ -398,11 +410,15 @@ export const ProductDetailsPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Color Picker */}
+              {/* Product Options */}
               {product.stock > 0 && (
                 <div className="space-y-6">
-                  {/* Colors */}
-                  <div>
+                  {/* Color Selector - Always Visible */}
+                  <div className="rounded-xl p-6 backdrop-blur-sm" style={{
+                    border: '2px solid #FF006E',
+                    background: 'rgba(255, 0, 110, 0.1)',
+                    boxShadow: '0 0 20px rgba(255, 0, 110, 0.3)',
+                  }}>
                     <label 
                       className="block text-lg font-bold mb-4"
                       style={{
@@ -410,48 +426,64 @@ export const ProductDetailsPage: React.FC = () => {
                         color: '#FF006E',
                       }}
                     >
-                      Color: {Array.isArray(product.colors) && product.colors[0]?.name ? selectedColor : selectedColor}
+                      👗 Color: <span className="ml-2 text-neon-cyan" style={{ textShadow: '0 0 10px #00D9FF' }}>{selectedColor}</span>
                     </label>
                     <div className="flex flex-wrap gap-4">
-                      {product.colors?.map((color: any, idx: number) => {
-                        const colorName = typeof color === 'string' ? color : color.name;
-                        const colorHex = typeof color === 'object' ? color.hex : '#CCCCCC';
-                        const isSelected = selectedColor === colorName;
-                        return (
-                          <motion.button
-                            key={idx}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setSelectedColor(colorName)}
-                            className="relative group"
-                          >
-                            <div
-                              className="w-16 h-16 rounded-xl border-3 transition-all duration-300"
-                              style={{
-                                backgroundColor: colorHex,
-                                borderColor: isSelected ? '#00D9FF' : '#FF006E',
-                                boxShadow: isSelected
-                                  ? `0 0 20px ${colorHex === '#FFFFFF' ? '#00D9FF' : colorHex}`
-                                  : `0 0 10px rgba(255, 0, 110, 0.3)`,
-                              }}
-                            />
-                            <span 
-                              className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-bold whitespace-nowrap mt-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                              style={{
-                                color: '#00D9FF',
-                                textShadow: '0 0 10px #00D9FF',
-                              }}
+                      {(() => {
+                        const colors = product.colors && product.colors.length > 0 ? product.colors : DEFAULT_COLORS;
+                        return colors.map((color: any, idx: number) => {
+                          const colorName = typeof color === 'string' ? color : color.name;
+                          const colorHex = typeof color === 'object' ? color.hex : '#CCCCCC';
+                          const isSelected = selectedColor === colorName;
+                          return (
+                            <motion.button
+                              key={idx}
+                              whileHover={{ scale: 1.15 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => setSelectedColor(colorName)}
+                              className="relative group transition-all duration-300"
                             >
-                              {colorName}
-                            </span>
-                          </motion.button>
-                        );
-                      })}
+                              <div
+                                className="w-10 h-10 rounded-full border-2 transition-all duration-300"
+                                style={{
+                                  backgroundColor: colorHex,
+                                  borderColor: isSelected ? '#00D9FF' : 'rgba(255, 255, 255, 0.3)',
+                                  boxShadow: isSelected
+                                    ? `0 0 15px ${colorHex}, ring-2 ring-offset-2 ring-white`
+                                    : `inset 0 0 5px rgba(0, 0, 0, 0.5)`,
+                                }}
+                              />
+                              {isSelected && (
+                                <motion.div
+                                  layoutId="colorRing"
+                                  className="absolute inset-0 rounded-full border-2 border-white ring-2 ring-offset-2 ring-white"
+                                  style={{
+                                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)',
+                                  }}
+                                />
+                              )}
+                              <span 
+                                className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-xs font-bold whitespace-nowrap px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity bg-neon-black/80 border border-neon-cyan"
+                                style={{
+                                  color: '#00D9FF',
+                                  textShadow: '0 0 10px #00D9FF',
+                                }}
+                              >
+                                {colorName}
+                              </span>
+                            </motion.button>
+                          );
+                        });
+                      })()}
                     </div>
                   </div>
 
-                  {/* Sizes */}
-                  <div>
+                  {/* Size Selector - Always Visible */}
+                  <div className="rounded-xl p-6 backdrop-blur-sm" style={{
+                    border: '2px solid #00D9FF',
+                    background: 'rgba(0, 217, 255, 0.1)',
+                    boxShadow: '0 0 20px rgba(0, 217, 255, 0.3)',
+                  }}>
                     <label 
                       className="block text-lg font-bold mb-4"
                       style={{
@@ -459,34 +491,37 @@ export const ProductDetailsPage: React.FC = () => {
                         color: '#00D9FF',
                       }}
                     >
-                      Size: {selectedSize}
-                      <span className="text-sm ml-2 opacity-60">Size Guide →</span>
+                      📏 Size: <span className="ml-2 text-neon-pink" style={{ textShadow: '0 0 10px #FF006E' }}>{selectedSize}</span>
+                      <span className="text-sm ml-3 opacity-60 font-normal">Size Guide →</span>
                     </label>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                      {product.sizes?.map((size: string) => (
-                        <motion.button
-                          key={size}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => setSelectedSize(size)}
-                          className="py-3 rounded-lg font-bold transition-all duration-300"
-                          style={{
-                            border: selectedSize === size ? '3px solid #00D9FF' : '2px solid #FF006E',
-                            background: selectedSize === size
-                              ? 'rgba(0, 217, 255, 0.2)'
-                              : 'rgba(255, 0, 110, 0.1)',
-                            color: selectedSize === size ? '#00D9FF' : '#FF006E',
-                            textShadow: selectedSize === size
-                              ? '0 0 10px #00D9FF'
-                              : '0 0 10px #FF006E',
-                            boxShadow: selectedSize === size
-                              ? '0 0 15px rgba(0, 217, 255, 0.5)'
-                              : '0 0 10px rgba(255, 0, 110, 0.3)',
-                          }}
-                        >
-                          {size}
-                        </motion.button>
-                      ))}
+                    <div className="flex flex-wrap gap-3">
+                      {(() => {
+                        const sizes = product.sizes && product.sizes.length > 0 ? product.sizes : DEFAULT_SIZES;
+                        return sizes.map((size: string) => (
+                          <motion.button
+                            key={size}
+                            whileHover={{ scale: 1.08 }}
+                            whileTap={{ scale: 0.92 }}
+                            onClick={() => setSelectedSize(size)}
+                            className="px-6 py-3 rounded-lg font-bold transition-all duration-300 min-w-[60px]"
+                            style={{
+                              border: selectedSize === size ? '3px solid #FF006E' : '2px solid rgba(255, 255, 255, 0.2)',
+                              background: selectedSize === size
+                                ? 'rgba(255, 0, 110, 0.3)'
+                                : 'rgba(255, 255, 255, 0.05)',
+                              color: selectedSize === size ? '#FF006E' : '#00D9FF',
+                              textShadow: selectedSize === size
+                                ? '0 0 10px #FF006E'
+                                : '0 0 10px #00D9FF',
+                              boxShadow: selectedSize === size
+                                ? '0 0 20px rgba(255, 0, 110, 0.6), inset 0 0 10px rgba(255, 0, 110, 0.2)'
+                                : '0 0 10px rgba(0, 217, 255, 0.2)',
+                            }}
+                          >
+                            {size}
+                          </motion.button>
+                        ));
+                      })()}
                     </div>
                   </div>
 
