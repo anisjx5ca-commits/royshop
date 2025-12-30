@@ -1,10 +1,18 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, PresentationControls, Html } from '@react-three/drei';
 import { Model3D } from './Model3D';
 
+interface Product {
+  id: string;
+  name: string;
+  model_url?: string;
+  image_url?: string;
+  [key: string]: any;
+}
+
 interface Product3DViewerProps {
-  modelPath: string;
+  product: Product;
   modelScale?: number;
   onModelLoad?: () => void;
   rotationSpeed?: number;
@@ -12,13 +20,36 @@ interface Product3DViewerProps {
 }
 
 export const Product3DViewer: React.FC<Product3DViewerProps> = ({
-  modelPath,
+  product,
   modelScale = 2,
   onModelLoad,
   rotationSpeed = 0.005,
   enableAutoRotate = true,
 }) => {
   const canvasRef = useRef(null);
+  const [has3DModel, setHas3DModel] = useState(!!product?.model_url);
+
+  // Debug logging
+  console.log('Product3DViewer - Product:', product?.name, 'Model URL:', product?.model_url);
+
+  // If no 3D model available, show fallback image
+  if (!product?.model_url) {
+    return (
+      <div className="w-full h-full min-h-[400px] md:min-h-[600px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden shadow-card-lg flex items-center justify-center">
+        {product?.image_url ? (
+          <img
+            src={product.image_url}
+            alt={product.name || 'Product'}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div style={{ color: '#999', fontSize: '18px', textAlign: 'center' }}>
+            No 3D model or image available
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full min-h-[400px] md:min-h-[600px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden shadow-card-lg">
@@ -64,11 +95,25 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
         >
           <group>
             <Suspense fallback={<LoadingFallback />}>
-              <Model3D
-                modelPath={modelPath}
-                scale={modelScale}
-                onLoad={onModelLoad}
-              />
+              {has3DModel && product.model_url ? (
+                <Model3D
+                  modelPath={product.model_url}
+                  scale={modelScale}
+                  onLoad={() => {
+                    onModelLoad?.();
+                  }}
+                />
+              ) : (
+                <Html center>
+                  <div style={{
+                    color: '#999',
+                    fontSize: '18px',
+                    textAlign: 'center',
+                  }}>
+                    Model not available
+                  </div>
+                </Html>
+              )}
             </Suspense>
           </group>
         </PresentationControls>

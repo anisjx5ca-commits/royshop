@@ -281,7 +281,7 @@ export const ProductDetailsPage: React.FC = () => {
                 }}
               >
                 <Product3DViewer
-                  modelPath={product.model_url}
+                  product={product}
                   modelScale={2}
                   enableAutoRotate={true}
                   rotationSpeed={0.005}
