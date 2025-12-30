@@ -8,6 +8,7 @@ import { ProductDetailsPage } from './pages/ProductDetailsPage';
 import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { SuccessPage } from './pages/SuccessPage';
+import { AboutPage } from './pages/AboutPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/success" element={<SuccessPage />} />
+              <Route path="/about" element={<AboutPage />} />
             </Routes>
           </main>
 
