@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ReviewModal } from '../components/ReviewModal';
+import { OrderReviewList } from '../components/OrderReviewList';
 import { useCartStore } from '../store/cartStore.ts';
 
 export const SuccessPage: React.FC = () => {
@@ -9,11 +9,6 @@ export const SuccessPage: React.FC = () => {
   const location = useLocation();
   const clearCart = useCartStore((state) => state.clearCart);
   const orderData = (location.state as any)?.orderData;
-  const [reviewModalState, setReviewModalState] = useState<{
-    isOpen: boolean;
-    productId: string;
-    productName: string;
-  }>({ isOpen: false, productId: '', productName: '' });
 
   useEffect(() => {
     // Clear cart on success page load
@@ -221,84 +216,16 @@ export const SuccessPage: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Ordered Items Section */}
+          {/* Bulk Review System */}
           {orderData && orderData.items && orderData.items.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="p-8 rounded-2xl mb-12"
-              style={{
-                border: '2px solid #FF006E',
-                background: 'rgba(255, 0, 110, 0.05)',
-                backdropFilter: 'blur(20px)',
+            <OrderReviewList
+              orderItems={orderData.items}
+              customerName={orderData.name}
+              onSubmitSuccess={() => {
+                // Optional: Do something after bulk review submission
+                console.log('Bulk reviews submitted successfully!');
               }}
-            >
-              <h2
-                className="text-2xl font-bold mb-6"
-                style={{
-                  textShadow: '0 0 20px #FF006E',
-                  color: '#FF006E',
-                }}
-              >
-                Items Purchased
-              </h2>
-
-              <div className="space-y-4">
-                {orderData.items.map((item: any, index: number) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 + index * 0.1 }}
-                    className="flex items-center justify-between p-4 rounded-lg backdrop-blur-sm"
-                    style={{
-                      border: '1px solid #00D9FF',
-                      background: 'rgba(10, 14, 39, 0.6)',
-                    }}
-                  >
-                    <div className="flex-1">
-                      <p
-                        className="font-bold"
-                        style={{
-                          color: '#00D9FF',
-                          textShadow: '0 0 10px #00D9FF',
-                        }}
-                      >
-                        {item.name}
-                      </p>
-                      <p
-                        className="text-sm mt-1"
-                        style={{ color: '#FF006E' }}
-                      >
-                        {item.color} • {item.size} • Qty: {item.quantity}
-                      </p>
-                    </div>
-
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() =>
-                        setReviewModalState({
-                          isOpen: true,
-                          productId: item.id || item.modelId || '',
-                          productName: item.name,
-                        })
-                      }
-                      className="px-4 py-2 font-bold rounded-lg ml-4 transition-all"
-                      style={{
-                        border: '2px solid #FFD700',
-                        background: 'rgba(255, 215, 0, 0.1)',
-                        color: '#FFD700',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      ⭐ Rate
-                    </motion.button>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+            />
           )}
 
           {/* Status Message */}
@@ -361,16 +288,6 @@ export const SuccessPage: React.FC = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Review Modal */}
-      <ReviewModal
-        isOpen={reviewModalState.isOpen}
-        productId={reviewModalState.productId}
-        productName={reviewModalState.productName}
-        onClose={() =>
-          setReviewModalState({ isOpen: false, productId: '', productName: '' })
-        }
-      />
     </div>
   );
 };

@@ -60,6 +60,7 @@ export interface Review {
   rating: number;
   comment: string;
   is_verified: boolean;
+  user_name?: string;
   created_at?: string;
 }
 
@@ -141,3 +142,23 @@ export async function createReview(review: Omit<Review, 'id' | 'created_at'>) {
     throw error;
   }
 }
+
+// Bulk create reviews from order
+export async function createBulkReviews(
+  reviews: Array<Omit<Review, 'id' | 'created_at'>>
+) {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert(reviews)
+      .select();
+    
+    if (error) throw error;
+    console.log('✅ Bulk reviews created successfully:', data);
+    return data as Review[];
+  } catch (error) {
+    console.error('❌ Error creating bulk reviews:', error);
+    throw error;
+  }
+}
+
