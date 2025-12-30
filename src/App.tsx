@@ -9,6 +9,7 @@ import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { SuccessPage } from './pages/SuccessPage';
 import { AboutPage } from './pages/AboutPage';
+import { AdminDashboard } from './pages/AdminDashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/success" element={<SuccessPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
             </Routes>
           </main>
 
