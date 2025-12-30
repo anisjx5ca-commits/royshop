@@ -69,4 +69,5 @@ useGLTF.preload([
   '/models/shirt-sample.glb',
   '/models/pants-sample.glb',
   '/models/jacket-sample.glb',
+  '/models/Elegant Dress Pants.glb',
 ]);
