@@ -27,7 +27,7 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
   enableAutoRotate = true,
 }) => {
   const canvasRef = useRef(null);
-  const [has3DModel, setHas3DModel] = useState(!!product?.model_url);
+  const [has3DModel] = useState(!!product?.model_url);
 
   // Debug logging
   console.log('Product3DViewer - Product:', product?.name, 'Model URL:', product?.model_url);
