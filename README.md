@@ -48,7 +48,11 @@ src/
 └── index.css                    # Global styles
 
 public/
-└── models/                      # 3D model files (GLB/GLTF)
+├── models/                      # 3D model files (GLB/GLTF)
+├── assets/
+│   └── images/                  # Fallback images & static assets
+├── _redirects                   # Netlify routing for SPA
+└── test.html
 
 .env.local                        # Environment variables (local)
 .env.example                      # Example env template
@@ -56,6 +60,16 @@ vite.config.ts                   # Vite configuration
 tailwind.config.js               # Tailwind config
 postcss.config.js                # PostCSS config
 ```
+
+## 📁 Static Assets Setup
+
+**Important:** All static files (images, 3D models) must be in the `public/` directory, not `src/`.
+
+- Files in `public/` are copied as-is to `dist/` root
+- Access them with absolute paths: `/models/filename.glb`, `/assets/images/filename.jpg`
+- ❌ Don't use `/public/` in paths - it's removed during build
+
+See [STATIC_ASSETS_GUIDE.md](STATIC_ASSETS_GUIDE.md) for detailed setup instructions.
 
 ## 🗄️ Supabase Database Schema
 
