@@ -38,7 +38,7 @@ const MOCK_PRODUCT: Record<string, any> = {
     name: 'Elegant Dress Pants',
     price: 5500,
     stock: 12,
-    model_url: '/models/Elegant Dress Pants.glb',
+    model_url: '/assets/models/Elegant%20Dress%20Pants.glb',
     description: 'Sophisticated dress pants that elevate any professional wardrobe.',
     features: ['Wool Blend', 'Perfect Fit', 'Professional Look', 'Easy Care'],
     colors: [
