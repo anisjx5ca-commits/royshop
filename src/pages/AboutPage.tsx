@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEnvelope, FaPhone, FaWhatsapp, FaClock, FaLightbulb, FaTrophy, FaRocket } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { supabase } from '../lib/supabase';
 
 export const AboutPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,19 +19,50 @@ export const AboutPage: React.FC = () => {
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
     if (!formData.name || !formData.email || !formData.message) {
       toast.error('Please fill all fields');
       return;
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // Simulate sending message
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast.success('Message sent! We will contact you soon.');
+      console.log('📤 Sending contact message to Supabase...');
+      
+      // Insert data into contact_messages table
+      const { data, error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            message: formData.message.trim(),
+          }
+        ])
+        .select();
+
+      if (error) {
+        console.error('❌ Supabase error:', error);
+        toast.error(`Failed to send message: ${error.message}`);
+        return;
+      }
+
+      console.log('✅ Message sent successfully:', data);
+      toast.success('Message Sent Successfully! We will contact you soon.');
       setFormData({ name: '', email: '', message: '' });
+      
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      console.error('❌ Error sending message:', errorMessage);
+      toast.error('Failed to send message. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
