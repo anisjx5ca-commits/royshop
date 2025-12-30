@@ -1,6 +1,13 @@
 # RoyShop - 3D E-Commerce Platform
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/31b6c956-c448-4b91-b7f3-0cd47fd537b3/deploy-status)](https://app.netlify.com/projects/royshop2/deploys)
+
 A premium, high-performance 3D e-commerce website for a clothing brand using React, Three.js, and Supabase.
+
+## 🌐 Live Demo & Repository
+
+- **Live Site:** [RoyShop on Netlify](https://royshop2.netlify.app)
+- **GitHub Repository:** [anisjx5ca-commits/royshop](https://github.com/anisjx5ca-commits/royshop)
 
 ## 🚀 Tech Stack
 
