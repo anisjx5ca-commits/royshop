@@ -27,13 +27,20 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
   enableAutoRotate = true,
 }) => {
   const canvasRef = useRef(null);
+  const [modelLoadError, setModelLoadError] = useState(false);
   const [has3DModel] = useState(!!product?.model_url);
 
   // Debug logging
-  console.log('Product3DViewer - Product:', product?.name, 'Model URL:', product?.model_url);
+  console.log('🎨 Product3DViewer - Product:', product?.name, 'Model URL:', product?.model_url);
 
-  // If no 3D model available, show fallback image
-  if (!product?.model_url) {
+  // Handle model loading error - silently fallback to image
+  const handleModelError = (error: Error) => {
+    console.warn('⚠️ 3D model failed to load, using fallback image instead:', error.message);
+    setModelLoadError(true);
+  };
+
+  // If no 3D model available OR model failed to load, show fallback image
+  if (!product?.model_url || modelLoadError) {
     return (
       <div className="w-full h-full min-h-[400px] md:min-h-[600px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg overflow-hidden shadow-card-lg flex items-center justify-center">
         {product?.image_url ? (
@@ -41,6 +48,7 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
             src={product.image_url}
             alt={product.name || 'Product'}
             className="w-full h-full object-cover"
+            title="3D model unavailable - showing product image"
           />
         ) : (
           <div style={{ color: '#999', fontSize: '18px', textAlign: 'center' }}>
@@ -95,13 +103,15 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
         >
           <group>
             <Suspense fallback={<LoadingFallback />}>
-              {has3DModel && product.model_url ? (
+              {has3DModel && product.model_url && !modelLoadError ? (
                 <Model3D
                   modelPath={product.model_url}
                   scale={modelScale}
                   onLoad={() => {
+                    console.log('✨ Model loaded successfully!');
                     onModelLoad?.();
                   }}
+                  onError={handleModelError}
                 />
               ) : (
                 <Html center>

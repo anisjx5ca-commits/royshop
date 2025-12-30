@@ -1,26 +1,30 @@
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, Html } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface Model3DProps {
   modelPath: string;
   scale?: number;
   onLoad?: () => void;
+  onError?: (error: Error) => void;
 }
 
 export const Model3D: React.FC<Model3DProps> = ({
   modelPath,
   scale = 2,
   onLoad,
+  onError,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
   
   // Debug logging for model loading
-  console.log('Loading model from:', modelPath);
+  console.log('🔄 Loading 3D model from:', modelPath);
   
   try {
-    const gltf = useGLTF(modelPath);
+    // Load GLB with Draco support enabled
+    // The gstatic CDN provides the Draco decoder for compressed models
+    const gltf = useGLTF(modelPath, 'https://www.gstatic.com/draco/v1/decoders/');
     const scene = gltf.scene.clone();
 
     useEffect(() => {
@@ -44,6 +48,8 @@ export const Model3D: React.FC<Model3DProps> = ({
       const box = new THREE.Box3().setFromObject(scene);
       const center = box.getCenter(new THREE.Vector3());
       scene.position.sub(center);
+      
+      console.log('✅ Model loaded successfully:', modelPath);
     }, [scene, onLoad]);
 
     useFrame(() => {
@@ -58,28 +64,36 @@ export const Model3D: React.FC<Model3DProps> = ({
       </group>
     );
   } catch (error) {
-    console.error('Error loading 3D model:', modelPath, error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorType = error instanceof Error && error.name ? error.name : 'Unknown Error';
     
-    // Show error text instead of cube
-    return (
-      <Html center>
-        <div style={{
-          color: '#ff6b35',
-          fontSize: '18px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          padding: '20px',
-        }}>
-          ⚠️ Failed to load model
-        </div>
-      </Html>
-    );
+    console.error('❌ Failed to load 3D model:', {
+      url: modelPath,
+      errorName: errorType,
+      errorMessage: errorMessage,
+      fullError: error,
+      isDracoIssue: errorMessage.includes('draco') || errorMessage.includes('Draco'),
+      isCorsIssue: errorMessage.includes('CORS') || errorMessage.includes('cors'),
+      isNetworkIssue: errorMessage.includes('404') || errorMessage.includes('fetch'),
+    });
+    
+    // Call onError callback instead of showing error UI
+    if (onError) {
+      onError(error instanceof Error ? error : new Error(String(error)));
+    }
+    
+    // Return empty group - parent will show fallback
+    return <group />;
   }
 };
 
-useGLTF.preload([
-  '/models/shirt-sample.glb',
-  '/models/pants-sample.glb',
-  '/models/jacket-sample.glb',
-  '/models/pants.glb',
-]);
+// Configure Draco support globally
+useGLTF.preload(
+  [
+    '/models/shirt-sample.glb',
+    '/models/pants-sample.glb',
+    '/models/jacket-sample.glb',
+    '/models/pants.glb',
+  ],
+  'https://www.gstatic.com/draco/v1/decoders/'
+);
