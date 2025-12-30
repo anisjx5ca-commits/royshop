@@ -1,6 +1,6 @@
 import { Suspense, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, PresentationControls } from '@react-three/drei';
+import { OrbitControls, Environment, PresentationControls, Html } from '@react-three/drei';
 import { Model3D } from './Model3D';
 
 interface Product3DViewerProps {
@@ -89,17 +89,17 @@ export const Product3DViewer: React.FC<Product3DViewerProps> = ({
   );
 };
 
-// Loading fallback
+// Loading fallback - shows "Loading..." text instead of cube
 const LoadingFallback: React.FC = () => (
-  <group>
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial
-        color="#cccccc"
-        wireframe={true}
-        opacity={0.5}
-        transparent={true}
-      />
-    </mesh>
-  </group>
+  <Html center>
+    <div style={{
+      color: '#666',
+      fontSize: '24px',
+      fontWeight: '500',
+      textAlign: 'center',
+      padding: '20px',
+    }}>
+      Loading...
+    </div>
+  </Html>
 );

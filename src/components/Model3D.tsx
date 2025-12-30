@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Html } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface Model3DProps {
@@ -15,10 +15,11 @@ export const Model3D: React.FC<Model3DProps> = ({
   onLoad,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
+  const [loadingError, setLoadingError] = useRef<boolean>(false);
   
   try {
     const gltf = useGLTF(modelPath);
-    const scene = gltf.scene;
+    const scene = gltf.scene.clone();
 
     useEffect(() => {
       if (onLoad) {
@@ -56,11 +57,21 @@ export const Model3D: React.FC<Model3DProps> = ({
     );
   } catch (error) {
     console.error('Error loading 3D model:', modelPath, error);
+    setLoadingError.current = true;
+    
+    // Show error text instead of cube
     return (
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ff6b35" />
-      </mesh>
+      <Html center>
+        <div style={{
+          color: '#ff6b35',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          padding: '20px',
+        }}>
+          ⚠️ Failed to load model
+        </div>
+      </Html>
     );
   }
 };
@@ -69,5 +80,5 @@ useGLTF.preload([
   '/models/shirt-sample.glb',
   '/models/pants-sample.glb',
   '/models/jacket-sample.glb',
-  '/assets/models/Elegant%20Dress%20Pants.glb',
+  '/models/Elegant Dress Pants.glb',
 ]);
